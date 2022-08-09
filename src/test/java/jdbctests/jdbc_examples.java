@@ -1,5 +1,6 @@
 package jdbctests;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.sql.*;
@@ -7,7 +8,7 @@ import java.sql.*;
 public class jdbc_examples {
 
 
-    String dbUrl="jdbc:oracle:thin:@50.17.50.178:1521:XE";
+    String dbUrl="jdbc:oracle:thin:@54.242.238.61:1521:XE";
     String dbUsername="hr";
     String dbPassword="hr";
 
@@ -41,6 +42,14 @@ public class jdbc_examples {
         }
 
 
+        resultSet=statement.executeQuery("SELECT * FROM regions");
+        while (resultSet.next()){
+
+            System.out.println(resultSet.getInt(1) + " " + resultSet.getString(2));
+
+        }
+
+
 
 
         //close connection
@@ -50,8 +59,43 @@ public class jdbc_examples {
         connection.close();
 
 
+    }
 
 
+    @DisplayName("ResultSet Methods")
+    @Test
+
+    public void test2() throws SQLException{
+
+        Connection connection= DriverManager.getConnection(dbUrl,dbUsername,dbPassword);
+        Statement statement=connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
+        ResultSet resultSet=statement.executeQuery("SELECT*FROM departments");
+
+        // how to find how many rows we have for the query
+        // move to last row
+
+        resultSet.last();
+        //get the row count
+        int rowCount=resultSet.getRow();
+        System.out.println(rowCount);
+
+
+        // to move before first row after we use .last method
+        resultSet.beforeFirst();
+
+        //print all second column information
+        while (resultSet.next()){
+
+            System.out.println(resultSet.getString(2));
+        }
+
+
+
+        //close connection
+
+        resultSet.close();
+        statement.close();
+        connection.close();
     }
 
 }
